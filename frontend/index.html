@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>House Price Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h2 {
+      color: #333;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      font-size: 18px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>House Price Predictor</h2>
+  <form id="predictionForm">
+    <label>Area:</label>
+    <input type="number" name="area" required />
+
+    <label>Bedrooms:</label>
+    <input type="number" name="bedrooms" required />
+
+    <label>Bathrooms:</label>
+    <input type="number" name="bathrooms" required />
+
+    <label>Stories:</label>
+    <input type="number" name="stories" required />
+
+    <label>Main Road:</label>
+    <select name="mainroad">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Guest Room:</label>
+    <select name="guestroom">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Basement:</label>
+    <select name="basement">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Hot Water Heating:</label>
+    <select name="hotwaterheating">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Air Conditioning:</label>
+    <select name="airconditioning">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Parking:</label>
+    <input type="number" name="parking" required />
+
+    <label>Preferred Area:</label>
+    <select name="prefarea">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <label>Furnishing Status:</label>
+    <select name="furnishingstatus">
+      <option value="furnished">Furnished</option>
+      <option value="semi-furnished">Semi-Furnished</option>
+      <option value="unfurnished">Unfurnished</option>
+    </select>
+
+    <button type="submit">Predict Price</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById("predictionForm");
+    const resultDiv = document.getElementById("result");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      data.area = parseFloat(data.area);
+      data.bedrooms = parseInt(data.bedrooms);
+      data.bathrooms = parseInt(data.bathrooms);
+      data.stories = parseInt(data.stories);
+      data.parking = parseInt(data.parking);
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          resultDiv.textContent = `Predicted Price: ₹${result.predicted_price.toLocaleString()}`;
+        } else {
+          resultDiv.textContent = "Error: " + (result.detail || "Prediction failed.");
+        }
+      } catch (err) {
+        resultDiv.textContent = "Server error. Is your FastAPI backend running?";
+      }
+    });
+  </script>
+</body>
+</html>
