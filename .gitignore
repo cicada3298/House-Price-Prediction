@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.ipynb_checkpoints
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Machine Learning Model
+*.pkl
+*.joblib
+
+# Data
+*.csv
+
+# Logs
+*.log
+
+# FastAPI reload artifacts
+*.db
+*.sqlite3
+
+# Frontend build (if any in future)
+frontend/node_modules/
+dist/
+build/
